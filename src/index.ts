@@ -38,7 +38,22 @@ const authLimiter = rateLimit({
 // Seguridad
 app.use(helmet())
 app.use(generalLimiter)
-app.use(cors())
+const allowedOrigins = [
+  'http://localhost:5173',              
+  'https://trackon-dashboard.vercel.app/',       
+]
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Permite requests sin origin (Thunder Client, Postman, apps móviles)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('No permitido por CORS'))
+    }
+  },
+  credentials: true,
+}))
 app.use(express.json({ limit: '10kb' })) // Limita el tamaño del body
 
 // Rutas públicas
