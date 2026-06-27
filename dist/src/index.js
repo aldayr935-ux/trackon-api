@@ -43,7 +43,14 @@ const allowedOrigins = [
 ];
 app.use((0, cors_1.default)({
     origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
+        // Log temporal para ver qué origen llega
+        console.log('Origin recibido:', origin);
+        if (!origin) {
+            callback(null, true);
+            return;
+        }
+        const isAllowed = allowedOrigins.some(allowed => origin.startsWith(allowed.replace(/\/$/, '')));
+        if (isAllowed) {
             callback(null, true);
         }
         else {
