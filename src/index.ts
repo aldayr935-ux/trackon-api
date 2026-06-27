@@ -15,6 +15,7 @@ import authRouter from './routes/auth.routes'
 dotenv.config()
 
 const app = express()
+app.set('trust proxy', 1)
 const PORT = process.env.PORT || 3000
 
 // Rate limiter general — 100 requests por IP cada 15 minutos

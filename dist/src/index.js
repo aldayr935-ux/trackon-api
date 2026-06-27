@@ -18,6 +18,7 @@ const dashboard_routes_1 = __importDefault(require("./routes/dashboard.routes"))
 const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 // Rate limiter general — 100 requests por IP cada 15 minutos
 const generalLimiter = (0, express_rate_limit_1.default)({
