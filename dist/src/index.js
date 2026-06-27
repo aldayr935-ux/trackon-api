@@ -37,15 +37,12 @@ const authLimiter = (0, express_rate_limit_1.default)({
     legacyHeaders: false,
 });
 // Seguridad
-app.use((0, helmet_1.default)());
-app.use(generalLimiter);
 const allowedOrigins = [
     'http://localhost:5173',
     'https://trackon-dashboard.vercel.app',
 ];
 app.use((0, cors_1.default)({
     origin: (origin, callback) => {
-        // Permite requests sin origin (Thunder Client, Postman, apps móviles)
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         }
@@ -55,7 +52,9 @@ app.use((0, cors_1.default)({
     },
     credentials: true,
 }));
-app.use(express_1.default.json({ limit: '10kb' })); // Limita el tamaño del body
+app.use((0, helmet_1.default)());
+app.use(generalLimiter);
+app.use(express_1.default.json({ limit: '10kb' }));
 // Rutas públicas
 app.use('/api/auth', authLimiter, auth_routes_1.default);
 app.get('/health', (req, res) => {
