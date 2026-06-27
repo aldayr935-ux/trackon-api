@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const shipments_controller_1 = require("../controllers/shipments.controller");
+const validate_middleware_1 = require("../middlewares/validate.middleware");
+const router = (0, express_1.Router)();
+router.get('/', shipments_controller_1.getShipments);
+router.get('/:id', shipments_controller_1.getShipmentById);
+router.post('/', validate_middleware_1.shipmentRules, validate_middleware_1.validate, shipments_controller_1.createShipment);
+router.put('/:id', shipments_controller_1.updateShipment);
+router.delete('/:id', shipments_controller_1.deleteShipment);
+exports.default = router;
