@@ -43,9 +43,6 @@ const allowedOrigins = [
 ]
 app.use(cors({
   origin: (origin, callback) => {
-    // Log temporal para ver qué origen llega
-    console.log('Origin recibido:', origin)
-    
     if (!origin) {
       callback(null, true)
       return
