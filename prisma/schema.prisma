@@ -36,27 +36,36 @@ model Shipment {
 }
 
 model Vehicle {
-  id        String        @id @default(cuid())
-  plate     String        @unique
-  model     String
-  status    VehicleStatus @default(AVAILABLE)
-  createdAt DateTime      @default(now())
+  id          String        @id @default(cuid())
+  plate       String        @unique
+  model       String
+  year        Int?
+  driver      String?
+  fuel        Float?
+  kmToday     Float?
+  cargo       Float?
+  status      VehicleStatus @default(AVAILABLE)
+  createdAt   DateTime      @default(now())
 
-  shipments Shipment[]
-  routes    Route[]
+  shipments   Shipment[]
+  routes      Route[]
 }
 
 model Route {
-  id        String      @id @default(cuid())
-  name      String
-  origin    String
-  destination String
-  status    RouteStatus @default(ACTIVE)
-  createdAt DateTime    @default(now())
+  id           String      @id @default(cuid())
+  name         String
+  origin       String
+  destination  String
+  distance     Float?
+  avgTime      Float?
+  punctuality  Float?
+  efficiency   Efficiency  @default(MEDIA)
+  status       RouteStatus @default(ACTIVE)
+  createdAt    DateTime    @default(now())
 
-  shipments Shipment[]
-  vehicle   Vehicle?    @relation(fields: [vehicleId], references: [id])
-  vehicleId String?
+  shipments    Shipment[]
+  vehicle      Vehicle?    @relation(fields: [vehicleId], references: [id])
+  vehicleId    String?
 }
 
 model Alert {
@@ -102,4 +111,10 @@ enum AlertType {
   INFO
   WARNING
   ERROR
+}
+
+enum Efficiency {
+  ALTA
+  MEDIA
+  BAJA
 }

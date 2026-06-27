@@ -46,13 +46,11 @@ export const getRouteById = async (req: Request, res: Response) => {
 // POST /routes
 export const createRoute = async (req: Request, res: Response) => {
   try {
-    const { name, origin, destination, vehicleId } = req.body;
+    const { name, origin, destination, distance, avgTime, punctuality, efficiency, vehicleId } = req.body
 
     if (!name || !origin || !destination) {
-      res
-        .status(400)
-        .json({ error: "Faltan campos requeridos: name, origin, destination" });
-      return;
+      res.status(400).json({ error: 'Faltan campos requeridos: name, origin, destination' })
+      return
     }
 
     const route = await prisma.route.create({
@@ -60,42 +58,50 @@ export const createRoute = async (req: Request, res: Response) => {
         name,
         origin,
         destination,
+        distance: distance ? parseFloat(distance) : null,
+        avgTime: avgTime ? parseFloat(avgTime) : null,
+        punctuality: punctuality ? parseFloat(punctuality) : null,
+        efficiency: efficiency || 'MEDIA',
         vehicleId: vehicleId || null,
       },
       include: { vehicle: true },
-    });
+    })
 
-    res.status(201).json(route);
+    res.status(201).json(route)
   } catch (error) {
-    res.status(500).json({ error: "Error al crear ruta" });
+    res.status(500).json({ error: 'Error al crear ruta' })
   }
-};
+}
 
 // PUT /routes/:id
 export const updateRoute = async (req: Request, res: Response) => {
   try {
-    const id = req.params.id as string;
-    const { status, vehicleId, name } = req.body;
+    const id = req.params.id as string
+    const { status, name, distance, avgTime, punctuality, efficiency, vehicleId } = req.body
 
     const route = await prisma.route.update({
       where: { id },
       data: {
-        ...(status && { status }),
-        ...(name && { name }),
+        ...(status !== undefined && { status }),
+        ...(name !== undefined && { name }),
+        ...(distance !== undefined && { distance: parseFloat(distance) }),
+        ...(avgTime !== undefined && { avgTime: parseFloat(avgTime) }),
+        ...(punctuality !== undefined && { punctuality: parseFloat(punctuality) }),
+        ...(efficiency !== undefined && { efficiency }),
         ...(vehicleId !== undefined && { vehicleId }),
       },
       include: { vehicle: true },
-    });
+    })
 
-    res.json(route);
+    res.json(route)
   } catch (error: any) {
-    if (error.code === "P2025") {
-      res.status(404).json({ error: "Ruta no encontrada" });
-      return;
+    if (error.code === 'P2025') {
+      res.status(404).json({ error: 'Ruta no encontrada' })
+      return
     }
-    res.status(500).json({ error: "Error al actualizar ruta" });
+    res.status(500).json({ error: 'Error al actualizar ruta' })
   }
-};
+}
 
 // DELETE /routes/:id
 export const deleteRoute = async (req: Request, res: Response) => {
