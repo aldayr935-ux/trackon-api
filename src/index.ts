@@ -40,7 +40,7 @@ app.use(helmet())
 app.use(generalLimiter)
 const allowedOrigins = [
   'http://localhost:5173',              
-  'https://trackon-dashboard.vercel.app/',       
+  'https://trackon-dashboard.vercel.app',       
 ]
 
 app.use(cors({
